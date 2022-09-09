@@ -1,0 +1,124 @@
+@property --x {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+@property --y {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+.block {
+  --offset: 0.125em;
+  transition: all 0.1s linear;
+  transition-property: --x, --y;
+  position: relative;
+  opacity: 0.7;
+  transform-style: preserve-3d;
+  --rotate: rotateX(calc(var(--x) * -30deg)) rotateY(calc(var(--y) * 30deg));
+  transform: var(--rotate);
+}
+.block > .block {
+  position: absolute;
+  top: calc(var(--grid-line-size) * -1);
+  left: calc(var(--grid-line-size) * -1);
+  z-index: -1;
+  transform: translate3d(calc(var(--x) * var(--offset) * -1), calc(var(--y) * var(--offset) * -1), -10px);
+}
+
+body {
+  perspective: 600px;
+  transform-style: preserve-3d;
+}
+
+body > .block {
+  -webkit-animation: wiggle 4s linear infinite;
+          animation: wiggle 4s linear infinite;
+}
+@-webkit-keyframes wiggle {
+  0% {
+    --x: 1;
+    --y: 1;
+  }
+  25% {
+    --x: -1;
+    --y: 1;
+  }
+  50% {
+    --x: -1;
+    --y: -1;
+  }
+  75% {
+    --x: 1;
+    --y: -1;
+  }
+  100% {
+    --x: 1;
+    --y: 1;
+  }
+}
+@keyframes wiggle {
+  0% {
+    --x: 1;
+    --y: 1;
+  }
+  25% {
+    --x: -1;
+    --y: 1;
+  }
+  50% {
+    --x: -1;
+    --y: -1;
+  }
+  75% {
+    --x: 1;
+    --y: -1;
+  }
+  100% {
+    --x: 1;
+    --y: 1;
+  }
+}
+
+html:hover .block {
+  -webkit-animation: none;
+          animation: none;
+}
+
+.block {
+  --grid-size: 0.25em;
+  --grid-line-size: 2px;
+  --grid-color: cyan;
+  --grid-overlay: rgba(0 0 0 / 0.6);
+  font-size: 20vmin;
+}
+.block::before {
+  content: "";
+  display: block;
+  width: 1em;
+  height: 1em;
+  border: solid var(--grid-line-size) var(--grid-color);
+  background-size: var(--grid-size) var(--grid-size);
+  background-position: calc(var(--grid-line-size) * -0.5) calc(var(--grid-line-size) * -0.5);
+  background-color: var(--grid-overlay);
+  background-image: linear-gradient(to right, var(--grid-color) var(--grid-line-size), transparent var(--grid-line-size)), linear-gradient(to bottom, var(--grid-color) var(--grid-line-size), transparent var(--grid-line-size));
+  position: relative;
+  z-index: 1;
+}
+
+html {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: black;
+  overflow: hidden;
+}
+html::before {
+  content: attr(style);
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  font-family: monospace;
+}
